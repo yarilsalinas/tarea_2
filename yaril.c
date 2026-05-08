@@ -11,3 +11,7 @@ typedef struct {
   List *genres;
   int year;
 } Film;
+
+typedef struct{
+  char sdbfsoudfghbasf
+}faio;
