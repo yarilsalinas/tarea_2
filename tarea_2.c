@@ -29,13 +29,23 @@ void mostrarMenuPrincipal() {
   puts("8) Salir");
 }
 
-  int is_equal_str(void *key1, void *key2) {
+int is_equal_str(void *key1, void *key2) {
     return strcmp((char *)key1, (char *)key2) == 0;
   }
 
-  int is_equal_int(void *key1, void *key2) {
+int is_equal_int(void *key1, void *key2) {
     return *(int *)key1 == *(int *)key2; // Compara valores enteros directamente
   }
+
+void imprimir_lista_strings(List *lista) {
+    char *item = list_first(lista);
+    while (item != NULL) {
+        printf("%s", item);
+        item = list_next(lista);
+        if (item != NULL) printf(", "); // Separa con coma si hay más
+    }
+    printf("\n");
+}
 
   void cargar_peliculas(Map *pelis_byid, Map *pelis_bygenres, Map *pelis_bydirectors) { 
     FILE *archivo = fopen("Top1500.csv", "r");
@@ -128,29 +138,29 @@ void buscar_por_id(Map *pelis_byid) {
 }
 
 void buscar_por_genero(Map *pelis_bygenres) {
-    char genre[100];
-    printf("Ingrese el género a buscar: ");
-    scanf( "%s", genre);
+  char genre[100];
+  printf("Ingrese el género a buscar: ");
+  scanf(" %99[^\n]", genre);
 
-    MapPair *pair = map_search(pelis_bygenres, genre);
-    if (pair == NULL) {
-        printf("\nNo se encontraron peliculas para el genero: %s\n", genre);
-        return;
-    }
+  MapPair *pair = map_search(pelis_bygenres, genre);
+  if (pair == NULL) {
+      printf("\nNo se encontraron peliculas para el genero: %s\n", genre);
+      return;
+  }
 
-    List *lista = (List *)pair->value;
-    Film *peli = list_first(lista);
+  List *lista = (List *)pair->value;
+  Film *peli = list_first(lista);
 
-    printf("\nResultados para el genero '%s':\n", genre);
-    while (peli != NULL) {
-        printf("---------------------------\n");
-        printf("ID     : %s\n", peli->id);
-        printf("Titulo : %s\n", peli->title);
-        printf("Anio   : %d\n", peli->year);
-        peli = list_next(lista);
-    }
-
+  printf("\nResultados para el genero '%s':\n", genre);
+  while (peli != NULL) {
     printf("---------------------------\n");
+    printf("ID      : %s\n", peli->id);
+    printf("Titulo  : %s\n", peli->title);
+    printf("Generos : ");
+    imprimir_lista_strings(peli->genres);
+      peli = list_next(lista);
+  }
+  printf("---------------------------\n");
 }
 
 void buscar_por_director(Map *pelis_bydirectors) {
@@ -169,13 +179,13 @@ void buscar_por_director(Map *pelis_bydirectors) {
 
   printf("\nResultados para el director '%s':\n", director);
   while (peli != NULL) {
-      printf("---------------------------\n");
-      printf("ID     : %s\n", peli->id);
-      printf("Titulo : %s\n", peli->title);
-      printf("Anio   : %d\n", peli->year);
-      peli = list_next(lista);
+    printf("---------------------------\n");
+    printf("ID         : %s\n", peli->id);
+    printf("Titulo     : %s\n", peli->title);
+    printf("Directores : ");
+    imprimir_lista_strings(peli->directors);
+    peli = list_next(lista);
   }
-
   printf("---------------------------\n");
 }
 
