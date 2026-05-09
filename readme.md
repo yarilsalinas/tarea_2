@@ -14,3 +14,8 @@
   git commit -m "..."
   git push
   ````
+  
+actualizar
+  ````
+  git pull
+  ````
