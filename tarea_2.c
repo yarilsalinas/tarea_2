@@ -8,8 +8,8 @@
 typedef struct {
   char id[100];
   char title[100];
-  List *genres;
   List *directors;
+  List *genres;
   int year;
 } Film;
 
@@ -22,7 +22,7 @@ void mostrarMenuPrincipal() {
   puts("1) Cargar Películas");
   puts("2) Buscar por id");
   puts("3) Buscar por género");
-  puts("4) ...");
+  puts("4) Buscar por autor");
   puts("5) ...");
   puts("6) ...");
   puts("7) ...");
@@ -37,7 +37,7 @@ void mostrarMenuPrincipal() {
     return *(int *)key1 == *(int *)key2; // Compara valores enteros directamente
   }
 
-  void cargar_peliculas(Map *pelis_byid, Map *pelis_bygenres) { 
+  void cargar_peliculas(Map *pelis_byid, Map *pelis_bygenres, Map *pelis_bydirectors) { 
     FILE *archivo = fopen("Top1500.csv", "r");
     if (archivo == NULL) {
       perror(
@@ -55,6 +55,7 @@ void mostrarMenuPrincipal() {
       Film *peli = (Film *)malloc(sizeof(Film));
       strcpy(peli->id, campos[1]);        // Asigna ID
       strcpy(peli->title, campos[5]);     // Asigna título
+      peli->directors = split_string(campos[14], ",");// Asigna director
       peli->genres = split_string(campos[11], ",");       // Inicializa la lista de géneros
       peli->year = atoi(campos[10]); // Asigna año, convirtiendo de cadena a entero
 
@@ -81,6 +82,22 @@ void mostrarMenuPrincipal() {
 
           // Avanza al siguiente género en la lista
           genre = list_next(peli->genres);
+      }
+
+      char *director = list_first(peli->directors);
+      while (director != NULL) {
+          MapPair *director_pair = map_search(pelis_bydirectors, director);
+
+          if (director_pair == NULL) {
+              List *new_list = list_create();
+              list_pushBack(new_list, peli);
+              map_insert(pelis_bydirectors, director, new_list);
+          } else {
+              List *director_list = (List *)director_pair->value;
+              list_pushBack(director_list, peli);
+          }
+
+          director = list_next(peli->directors);
       }
 
     }
@@ -145,7 +162,7 @@ int main() {
 
     switch (opcion) {
     case '1':
-      cargar_peliculas(pelis_byid, pelis_bygenres);
+      cargar_peliculas(pelis_byid, pelis_bygenres, pelis_bydirectors);
       break;
     case '2':
       buscar_por_id(pelis_byid);
