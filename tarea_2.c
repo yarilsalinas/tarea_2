@@ -127,26 +127,56 @@ void buscar_por_id(Map *pelis_byid) {
   }
 }
 
-void buscar_por_genero(Map *pelis_bygenres){
-  char genre[100];
-  printf("Ingrese el género a buscar: ");
-  scanf(" %[^\n]", genre);
+void buscar_por_genero(Map *pelis_bygenres) {
+    char genre[100];
+    printf("Ingrese el género a buscar: ");
+    scanf( "%s", genre);
 
-  MapPair *pair = map_search(pelis_bygenres, genre);
-  if(pair == NULL){
-    printf("No se encontraron peliculas\n");
-    return;
+    MapPair *pair = map_search(pelis_bygenres, genre);
+    if (pair == NULL) {
+        printf("\nNo se encontraron peliculas para el genero: %s\n", genre);
+        return;
+    }
+
+    List *lista = (List *)pair->value;
+    Film *peli = list_first(lista);
+
+    printf("\nResultados para el genero '%s':\n", genre);
+    while (peli != NULL) {
+        printf("---------------------------\n");
+        printf("ID     : %s\n", peli->id);
+        printf("Titulo : %s\n", peli->title);
+        printf("Anio   : %d\n", peli->year);
+        peli = list_next(lista);
+    }
+
+    printf("---------------------------\n");
+}
+
+void buscar_por_director(Map *pelis_bydirectors) {
+  char director[100];
+  printf("Ingrese el director a buscar: ");
+  if (scanf(" %99[^\n]", director) != 1) return;
+
+  MapPair *pair = map_search(pelis_bydirectors, director);
+  if (pair == NULL) {
+      printf("\nNo se encontraron peliculas para el director: %s\n", director);
+      return;
   }
-  List *lista = pair -> value;
+
+  List *lista = (List *)pair->value;
   Film *peli = list_first(lista);
 
-  while(peli != NULL){
-    printf("---\n");
-    printf("ID : %s\n", peli -> id);
-    printf("Titulo : %s\n", peli -> title);
-    printf("año : %d\n", peli -> year);
-    peli = list_next(lista);
-  }  
+  printf("\nResultados para el director '%s':\n", director);
+  while (peli != NULL) {
+      printf("---------------------------\n");
+      printf("ID     : %s\n", peli->id);
+      printf("Titulo : %s\n", peli->title);
+      printf("Anio   : %d\n", peli->year);
+      peli = list_next(lista);
+  }
+
+  printf("---------------------------\n");
 }
 
 int main() {
@@ -171,6 +201,7 @@ int main() {
       buscar_por_genero(pelis_bygenres);
       break;
     case '4':
+      buscar_por_director(pelis_bydirectors);
       break;
     case '5':
       break;
