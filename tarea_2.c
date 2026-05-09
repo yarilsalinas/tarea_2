@@ -20,7 +20,7 @@ void mostrarMenuPrincipal() {
 
   puts("1) Cargar Películas");
   puts("2) Buscar por id");
-  puts("3) ...");
+  puts("3) Buscar por género");
   puts("4) ...");
   puts("5) ...");
   puts("6) ...");
@@ -37,7 +37,7 @@ void mostrarMenuPrincipal() {
   }
 
   void cargar_peliculas(Map *pelis_byid, Map *pelis_bygenres) { 
-    FILE *archivo = fopen("data/Top1500.csv", "r");
+    FILE *archivo = fopen("Top1500.csv", "r");
     if (archivo == NULL) {
       perror(
           "Error al abrir el archivo"); 
@@ -126,6 +126,30 @@ void buscar_por_id(Map *pelis_byid) {
   }
 }
 
+void buscar_por_genero(Map *pelis_bygenres){
+  char genre[100];
+  printf("Ingrese el género a buscar: ");
+  scanf(" %[^\n]", genre);
+
+  MapPair *pair = map_search(pelis_bygenres, genre);
+  if(pair == NULL){
+    printf("No se encontraron peliculas\n");
+    return;
+  }
+  List *lista = pair -> value;
+  Film *peli = list_first(lista);
+
+  while(peli != NULL){
+    printf("---\n");
+    printf("ID : %s\n", peli -> id);
+    printf("Titulo : %s\n", peli -> title);
+    printf("año : %d\n", peli -> year);
+    peli = list_next(lista);
+  }
+  
+  
+}
+
 int main() {
   char opcion;
   Map *pelis_byid = map_create(is_equal_str);
@@ -144,6 +168,7 @@ int main() {
       buscar_por_id(pelis_byid);
       break;
     case '3':
+      buscar_por_genero(pelis_bygenres);
       break;
     case '4':
       break;
