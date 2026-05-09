@@ -9,6 +9,7 @@ typedef struct {
   char id[100];
   char title[100];
   List *genres;
+  List *directors;
   int year;
 } Film;
 
@@ -57,7 +58,6 @@ void mostrarMenuPrincipal() {
       peli->genres = split_string(campos[11], ",");       // Inicializa la lista de géneros
       peli->year = atoi(campos[10]); // Asigna año, convirtiendo de cadena a entero
 
-
       // Inserta la película en el mapa usando el ID como clave
       map_insert(pelis_byid, peli->id, peli);
 
@@ -85,22 +85,6 @@ void mostrarMenuPrincipal() {
 
     }
     fclose(archivo); // Cierra el archivo después de leer todas las líneas
-
-
-    // Itera sobre el mapa para mostrar las películas cargadas
-    MapPair *pair = map_first(pelis_byid);
-    while (pair != NULL) {
-      Film *peli = pair->value;
-      printf("ID: %s, Título: %s, Año: %d\n", peli->id, peli->title,
-             peli->year);
-
-      printf("Géneros: ");
-      for(char *genre = list_first(peli->genres); genre != NULL; genre = list_next(peli->genres))
-        printf("%s, ", genre);
-      printf("\n");
-
-      pair = map_next(pelis_byid); // Avanza al siguiente par en el mapa
-    }
   }
 
 void buscar_por_id(Map *pelis_byid) {
@@ -133,7 +117,7 @@ void buscar_por_genero(Map *pelis_bygenres){
 
   MapPair *pair = map_search(pelis_bygenres, genre);
   if(pair == NULL){
-    printf("No se encontraron peliculas de el genero "%c"\n", genre);
+    printf("No se encontraron peliculas\n");
     return;
   }
   List *lista = pair -> value;
@@ -152,6 +136,7 @@ int main() {
   char opcion;
   Map *pelis_byid = map_create(is_equal_str);
   Map *pelis_bygenres = map_create(is_equal_str);
+  Map *pelis_bydirectors = map_create(is_equal_str);
 
   do {
     mostrarMenuPrincipal();
