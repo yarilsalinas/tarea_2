@@ -26,6 +26,7 @@ void mostrarMenuPrincipal() {
   puts("6) ...");
   puts("7) ...");
   puts("8) Salir");
+}
 
   int is_equal_str(void *key1, void *key2) {
     return strcmp((char *)key1, (char *)key2) == 0;
@@ -101,3 +102,61 @@ void mostrarMenuPrincipal() {
       pair = map_next(pelis_byid); // Avanza al siguiente par en el mapa
     }
   }
+
+void buscar_por_id(Map *pelis_byid) {
+  char id[10]; // Buffer para almacenar el ID de la película
+
+  // Solicita al usuario el ID de la película
+  printf("Ingrese el id de la película: ");
+  scanf("%s", id); // Lee el ID del teclado
+
+  // Busca el par clave-valor en el mapa usando el ID proporcionado
+  MapPair *pair = map_search(pelis_byid, id);
+
+  // Si se encontró el par clave-valor, se extrae y muestra la información de la
+  // película
+  if (pair != NULL) {
+    Film *peli =
+        pair->value; // Obtiene el puntero a la estructura de la película
+    // Muestra el título y el año de la película
+    printf("Título: %s, Año: %d\n", peli->title, peli->year);
+  } else {
+    // Si no se encuentra la película, informa al usuario
+    printf("La película con id %s no existe\n", id);
+  }
+}
+
+int main() {
+  char opcion;
+  Map *pelis_byid = map_create(is_equal_str);
+  Map *pelis_bygenres = map_create(is_equal_str);
+
+  do {
+    mostrarMenuPrincipal();
+    printf("Ingrese su opción: ");
+    scanf(" %c", &opcion);
+
+    switch (opcion) {
+    case '1':
+      cargar_peliculas(pelis_byid, pelis_bygenres);
+      break;
+    case '2':
+      buscar_por_id(pelis_byid);
+      break;
+    case '3':
+      break;
+    case '4':
+      break;
+    case '5':
+      break;
+    case '6':
+      break;
+    case '7':
+      break;
+    }
+    presioneTeclaParaContinuar();
+
+  } while (opcion != '8');
+
+  return 0;
+}

@@ -8,3 +8,9 @@
  ````
  ./tarea_2
  ````
+ Subir cambios:
+  ````
+  git add .
+  git commit -m "..."
+  git push
+  ````
