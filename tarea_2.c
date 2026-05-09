@@ -133,7 +133,7 @@ void buscar_por_genero(Map *pelis_bygenres){
 
   MapPair *pair = map_search(pelis_bygenres, genre);
   if(pair == NULL){
-    printf("No se encontraron peliculas\n");
+    printf("No se encontraron peliculas de el genero "%c"\n", genre);
     return;
   }
   List *lista = pair -> value;
@@ -145,9 +145,7 @@ void buscar_por_genero(Map *pelis_bygenres){
     printf("Titulo : %s\n", peli -> title);
     printf("año : %d\n", peli -> year);
     peli = list_next(lista);
-  }
-  
-  
+  }  
 }
 
 int main() {
