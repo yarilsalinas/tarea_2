@@ -18,24 +18,25 @@ while (pair != NULL) {
 
 //borrado buscar por ID
 void buscar_por_id(Map *pelis_byid) {
-  char id[10]; // Buffer para almacenar el ID de la película
+  char id[10];
+  printf("Ingrese el ID a buscar: ");
+  scanf("%s", id); 
 
-  // Solicita al usuario el ID de la película
-  printf("Ingrese el id de la película: ");
-  scanf("%s", id); // Lee el ID del teclado
-
-  // Busca el par clave-valor en el mapa usando el ID proporcionado
   MapPair *pair = map_search(pelis_byid, id);
-
-  // Si se encontró el par clave-valor, se extrae y muestra la información de la
-  // película
-  if (pair != NULL) {
-    Film *peli =
-        pair->value; // Obtiene el puntero a la estructura de la película
-    // Muestra el título y el año de la película
-    printf("Título: %s, Año: %d\n", peli->title, peli->year);
-  } else {
-    // Si no se encuentra la película, informa al usuario
-    printf("La película con id %s no existe\n", id);
+  if (pair == NULL) {
+    printf("\nNo se encontraron peliculas para el ID: %s\n", id);
+    return;
   }
+  if (pair != NULL) {
+    Film *peli = pair->value;
+
+    printf("\nResultados para el ID '%s':\n", id);
+    printf("---------------------------\n");
+    printf("ID      : %s\n", peli->id);
+    printf("Titulo  : %s\n", peli->title);
+    printf("---------------------------\n");
+    } else {
+      // Si no se encuentra la película, informa al usuario
+      printf("La película con id %s no existe\n", id);
+    }
 }
