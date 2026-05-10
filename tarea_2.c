@@ -193,12 +193,83 @@ void buscar_por_decada(Map *pelis_bydecada){
   printf("---------------------------\n");
 }
 
+void mi_watchlist(Map *pelis_byid, List *watchlist) {
+  char opcion;
+  char id_buscado[10];
+  Film *p;
+  do {
+    printf("\n--- GESTIÓN DE WATCHLIST ---\n");
+    printf("1) Agregar película\n");
+    printf("2) Eliminar película\n");
+    printf("3) Mostrar mi lista\n");
+    printf("4) Volver al menú principal\n"); // Agregada opción de salida
+    printf("Ingrese su opción: ");
+    scanf(" %c", &opcion);
+
+    switch (opcion) {
+      case '1':
+        printf("Ingrese el ID de la película: ");
+        scanf("%s", id_buscado);
+
+        MapPair *pair = map_search(pelis_byid, id_buscado);
+        if (pair != NULL) {
+          Film *peli_encontrada = (Film *)pair->value;
+          list_pushBack(watchlist, peli_encontrada);
+          printf("'%s' agregada con éxito\n", peli_encontrada->title);
+        } else {
+            printf("La película con ID %s no existe.\n", id_buscado);
+        }
+        break;
+
+      case '2':
+        printf("Ingrese el ID de la película a eliminar: ");
+        scanf("%s", id_buscado);
+
+        p = list_first(watchlist);
+        int encontrado = 0;
+        while (p != NULL) {
+        if (strcmp(p->id, id_buscado) == 0) {
+          printf("Película '%s' eliminada de tu Watchlist.\n", p->title); 
+          list_popCurrent(watchlist); 
+          encontrado = 1;
+          break;
+        }
+        p = list_next(watchlist);
+        }
+        if (!encontrado) {
+          printf("No se encontró película con id: %s\n", id_buscado);
+        }
+        break;
+
+      case '3':
+        printf("\n--- MI WATCHLIST ---\n");
+        p = list_first(watchlist);
+        if (p == NULL) {
+          printf("Tu lista está vacía.\n");
+        } else {
+            while (p != NULL) {
+            printf("---------------------------\n");
+            printf("ID     : %s\n", p->id);
+            printf("Titulo : %s\n", p->title);
+            printf("Fecha  : %d\n", p->year);
+            p = list_next(watchlist);
+            }
+        printf("---------------------------\n");
+        }
+        break;
+      }
+        if (opcion != '4') presioneTeclaParaContinuar();
+
+    } while (opcion != '4');
+}
+
 int main() {
   char opcion;
   Map *pelis_byid = map_create(is_equal_str);
   Map *pelis_bygenres = map_create(is_equal_str);
   Map *pelis_bydirectors = map_create(is_equal_str);
   Map *pelis_bydecada = map_create(is_equal_str);
+  List *watchlist = list_create();
   
   do {
     mostrarMenuPrincipal();
@@ -227,7 +298,7 @@ int main() {
       //- **Agregar:** Se solicita el **ID** de la película y se agrega a la lista.
       //- **Eliminar:** Se solicita el **ID** de la película y se retira de la lista.
       //- **Mostrar:** Despliega la información detallada de todas las películas guardadas en la Watchlist.
-      
+      mi_watchlist(pelis_byid, watchlist);
       break;
     case '7':
       //1. **Calificar Película:** La usuaria ingresa el **ID** de una película, su **nombre de usuario** (ej. "Javiera") y una         calificación (ej. del 1 al 10). La aplicación debe registrar esta nota asociada a la usuaria para la película seleccionada.
