@@ -20,9 +20,9 @@ void mostrarMenuPrincipal() {
   puts("========================================");
 
   puts("1) Cargar Películas");
-  puts("2) Buscar por id");
-  puts("3) Buscar por género");
-  puts("4) Buscar por autor");
+  puts("2) Buscar por género");
+  puts("3) Buscar por autor");
+  puts("4) ...");
   puts("5) ...");
   puts("6) ...");
   puts("7) ...");
@@ -111,32 +111,9 @@ void cargar_peliculas(Map *pelis_byid, Map *pelis_bygenres, Map *pelis_bydirecto
       }
 
     }
+    printf("archivo cargado correctamente\n");
     fclose(archivo); // Cierra el archivo después de leer todas las líneas
   }
-
-void buscar_por_id(Map *pelis_byid) {
-  char id[10];
-  printf("Ingrese el ID a buscar: ");
-  scanf("%s", id); 
-
-  MapPair *pair = map_search(pelis_byid, id);
-  if (pair == NULL) {
-    printf("\nNo se encontraron peliculas para el ID: %s\n", id);
-    return;
-  }
-  if (pair != NULL) {
-    Film *peli = pair->value;
-  
-    printf("\nResultados para el ID '%s':\n", id);
-    printf("---------------------------\n");
-    printf("ID      : %s\n", peli->id);
-    printf("Titulo  : %s\n", peli->title);
-    printf("---------------------------\n");
-    } else {
-      // Si no se encuentra la película, informa al usuario
-      printf("La película con id %s no existe\n", id);
-    }
-}
 
 void buscar_por_genero(Map *pelis_bygenres) {
   char genre[100];
@@ -206,19 +183,29 @@ int main() {
       cargar_peliculas(pelis_byid, pelis_bygenres, pelis_bydirectors);
       break;
     case '2':
-      buscar_por_id(pelis_byid);
-      break;
-    case '3':
       buscar_por_genero(pelis_bygenres);
       break;
-    case '4':
+    case '3':
       buscar_por_director(pelis_bydirectors);
       break;
+    case '4':
+      //Buscar por Década: La usuaria ingresa un año de referencia (ej. 1990) y la aplicación debe mostrar todas las películas lanzadas en esa década (en este caso, entre 1990 y 1999 inclusive).
+      
+      break;
     case '5':
+      //Búsqueda Avanzada (Doble Criterio): La aplicación solicita a la usuaria un género y una década simultáneamente. El sistema debe mostrar solo los títulos que cumplan con ambos requisitos (ej. "Terror" de los "1990").
+      
       break;
     case '6':
+      //6. **Gestionar Mi Watchlist:** El sistema permite mantener una lista de películas para ver más tarde:
+      //- **Agregar:** Se solicita el **ID** de la película y se agrega a la lista.
+      //- **Eliminar:** Se solicita el **ID** de la película y se retira de la lista.
+      //- **Mostrar:** Despliega la información detallada de todas las películas guardadas en la Watchlist.
+      
       break;
     case '7':
+      //1. **Calificar Película:** La usuaria ingresa el **ID** de una película, su **nombre de usuario** (ej. "Javiera") y una         calificación (ej. del 1 al 10). La aplicación debe registrar esta nota asociada a la usuaria para la película seleccionada.
+      //Nota:* Si la usuaria ya había calificado la película, la nueva nota debe sobrescribir la anterior.
       break;
     }
     presioneTeclaParaContinuar();
