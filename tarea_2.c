@@ -24,7 +24,7 @@ void mostrarMenuPrincipal() {
   puts("3) Buscar por autor");
   puts("4) Buscar por decada");
   puts("5) ...");
-  puts("6) ...");
+  puts("6) Gestión de watchlist");
   puts("7) ...");
   puts("8) Salir");
 }
