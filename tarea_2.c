@@ -264,7 +264,7 @@ void mi_watchlist(Map *pelis_byid, List *watchlist) {
     printf("1) Agregar película\n");
     printf("2) Eliminar película\n");
     printf("3) Mostrar mi lista\n");
-    printf("4) Volver al menú principal\n"); // Agregada opción de salida
+    printf("4) Volver al menú principal\n");
     printf("Ingrese su opción: ");
     scanf(" %c", &opcion);
 
