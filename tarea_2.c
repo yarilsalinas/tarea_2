@@ -11,6 +11,7 @@ typedef struct {
   List *directors;
   List *genres;
   int year;
+  Map *calificaciones;
 } Film;
 
 void mostrarMenuPrincipal() {
@@ -25,7 +26,7 @@ void mostrarMenuPrincipal() {
   puts("4) Buscar por decada");
   puts("5) Buscar por doble criterio(Genero, Decada)");
   puts("6) Gestión de watchlist");
-  puts("7) ...");
+  puts("7) Calificar pelicula");
   puts("8) Salir");
 }
 
@@ -45,6 +46,22 @@ void imprimir_lista_strings(List *lista) {
         if (item != NULL) printf(", ");
     }
     printf("\n");
+}
+
+void mostrar_calificaciones(Film *peli){//muestra calificaciones para no hacer repetitivo el codigo
+  MapPair *pair = map_first(peli -> calificaciones);
+  if(pair == NULL){
+    printf("No a recibido calificaciones aún\n");
+    return;
+  }
+  printf("Calificaciones : ");
+  while(pair != NULL){
+    char *usuario = pair -> key;
+    int *nota = pair -> value;
+    printf("%s : %d \n", usuario, *nota);
+
+    pair = map_next(peli -> calificaciones);
+  }
 }
 
 void cargar_peliculas(Map *pelis_byid, Map *pelis_bygenres, Map *pelis_bydirectors, Map *pelis_bydecada) { 
@@ -67,6 +84,8 @@ void cargar_peliculas(Map *pelis_byid, Map *pelis_bygenres, Map *pelis_bydirecto
     peli->directors = split_string(campos[14], ",");// Asigna director
     peli->genres = split_string(campos[11], ",");       // Inicializa la lista de géneros
     peli->year = atoi(campos[10]); // Asigna año, convirtiendo de cadena a entero
+    peli->calificaciones = map_create(is_equal_str);
+
     
     map_insert(pelis_byid, peli->id, peli);// Inserta la película en el mapa usando el ID como clave
     char *genre = list_first(peli->genres);// Obtiene el primer género de la lista de géneros de la película  
@@ -137,7 +156,8 @@ void buscar_por_genero(Map *pelis_bygenres) {
     printf("Titulo  : %s\n", peli->title);
     printf("Generos : ");
     imprimir_lista_strings(peli->genres);
-      peli = list_next(lista);
+    mostrar_calificaciones(peli);
+    peli = list_next(lista);
   }
   printf("---------------------------\n");
 }
@@ -163,6 +183,7 @@ void buscar_por_director(Map *pelis_bydirectors) {
     printf("Titulo     : %s\n", peli->title);
     printf("Directores : ");
     imprimir_lista_strings(peli->directors);
+    mostrar_calificaciones(peli);
     peli = list_next(lista);
   }
   printf("---------------------------\n");
@@ -188,6 +209,7 @@ void buscar_por_decada(Map *pelis_bydecada){
     printf("ID     : %s\n", peli->id);
     printf("Titulo : %s\n", peli->title);
     printf("Fecha  : %d\n", peli->year);
+    mostrar_calificaciones(peli);
     peli = list_next(lista);
   }
   printf("---------------------------\n");
@@ -223,6 +245,7 @@ void busqueda_avanzada(Map *pelis_bygenre){
       printf("ID: %s\n", peli -> id);
       printf("Titulo: %s\n", peli -> title);
       printf("Año: %d\n", peli -> year);
+      mostrar_calificaciones(peli);
       contador++;
     }
     peli = list_next(lista);
@@ -291,6 +314,7 @@ void mi_watchlist(Map *pelis_byid, List *watchlist) {
             printf("ID     : %s\n", p->id);
             printf("Titulo : %s\n", p->title);
             printf("Fecha  : %d\n", p->year);
+            mostrar_calificaciones(p);
             p = list_next(watchlist);
             }
         printf("---------------------------\n");
@@ -300,6 +324,47 @@ void mi_watchlist(Map *pelis_byid, List *watchlist) {
         if (opcion != '4') presioneTeclaParaContinuar();
 
     } while (opcion != '4');
+}
+
+void calificar_pelicula(Map *pelis_byid){
+  char id[100];
+  char usuario[100];
+  int nota;
+
+  printf("Ingrese el id de la pelicula a calificar: ");
+  scanf("%s", id);
+  MapPair *pair = map_search(pelis_byid, id);
+
+  if(pair == NULL){
+    printf("Pelicula no encontrada\n");
+    return;
+  }
+  Film *peli = pair -> value;
+  printf("Ingrese el nombre del usuario: ");
+  scanf(" %99[^\n]", usuario);
+
+  printf("Ingrese la nota de 1 a 10: ");
+  scanf("%d", &nota);
+
+  if(nota < 1 || nota > 10){
+    printf("Nota no valida\n");
+    return;
+  }
+  MapPair *cali_pair = map_search(peli -> calificaciones, usuario);
+
+  if(cali_pair != NULL){
+    *((int *)cali_pair -> value) = nota;
+    printf("Se a ingresado correctamente la nota\n");
+  }
+  else{
+    int *nuevaNota = malloc(sizeof(int));
+    *nuevaNota = nota;
+
+    char *nuevoUsuario = malloc(strlen(usuario) + 1);
+    strcpy(nuevoUsuario, usuario);
+    map_insert(peli -> calificaciones, nuevoUsuario, nuevaNota);
+    printf("nota agregada correctamente\n");
+  }
 }
 
 int main() {
@@ -342,6 +407,7 @@ int main() {
     case '7':
       //1. **Calificar Película:** La usuaria ingresa el **ID** de una película, su **nombre de usuario** (ej. "Javiera") y una         calificación (ej. del 1 al 10). La aplicación debe registrar esta nota asociada a la usuaria para la película seleccionada.
       //Nota:* Si la usuaria ya había calificado la película, la nueva nota debe sobrescribir la anterior.
+      calificar_pelicula(pelis_byid);
       break;
     }
     presioneTeclaParaContinuar();
