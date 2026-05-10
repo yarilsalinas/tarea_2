@@ -23,7 +23,7 @@ void mostrarMenuPrincipal() {
   puts("2) Buscar por género");
   puts("3) Buscar por autor");
   puts("4) Buscar por decada");
-  puts("5) ...");
+  puts("5) Buscar por doble criterio(Genero, Decada)");
   puts("6) Gestión de watchlist");
   puts("7) ...");
   puts("8) Salir");
@@ -193,6 +193,45 @@ void buscar_por_decada(Map *pelis_bydecada){
   printf("---------------------------\n");
 }
 
+void busqueda_avanzada(Map *pelis_bygenre){
+  char genre[100];
+  int decada;
+  
+  printf("Ingrese el genero a buscar: ");
+  scanf(" %[^\n]", genre);
+
+  printf("Ingrese la decada a buscar: ");
+  scanf("%d", &decada);
+  if(decada % 10 != 0){
+    printf("Ingrese una decada valida\n");
+    return;
+  }
+
+  MapPair *pair = map_search(pelis_bygenre, genre);
+  if(pair == NULL){
+    printf("No se encontraron peliculas\n");
+    return;
+  }
+  
+  List *lista = pair -> value;
+  Film *peli = list_first(lista);
+
+  int contador = 0; //Peliculas q cumplen ambos parametros
+  while(peli != NULL){
+    if(peli -> year >= decada && peli -> year <= decada + 9){
+      printf("---\n");
+      printf("ID: %s\n", peli -> id);
+      printf("Titulo: %s\n", peli -> title);
+      printf("Año: %d\n", peli -> year);
+      contador++;
+    }
+    peli = list_next(lista);
+  }
+  if(contador == 0){
+    printf("No se encontraron peliculas que cumplan ambos parametros\n");
+  }
+}
+
 void mi_watchlist(Map *pelis_byid, List *watchlist) {
   char opcion;
   char id_buscado[10];
@@ -291,7 +330,7 @@ int main() {
       break;
     case '5':
       //Búsqueda Avanzada (Doble Criterio): La aplicación solicita a la usuaria un género y una década simultáneamente. El sistema debe mostrar solo los títulos que cumplan con ambos requisitos (ej. "Terror" de los "1990").
-      
+      busqueda_avanzada(pelis_bygenres);
       break;
     case '6':
       //6. **Gestionar Mi Watchlist:** El sistema permite mantener una lista de películas para ver más tarde:
