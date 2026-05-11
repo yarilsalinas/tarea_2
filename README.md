@@ -1,5 +1,5 @@
 # Tarea 2
- ## objetivo:
+## objetivo:
 El objetivo de este programa es procesar un catálogo de películas desde un archivo CSV (Top1500.csv) que permitir al usuario interactuar con el de manera eficiente mediante el uso de (TDAs) como Listas y Mapas. El sistema permite búsquedas rápidas, gestión de una lista personal y un sistema de calificaciones por usuario.
   
  ## en este programa lo que hacemos es darle al usuario 8 opciones:
@@ -22,6 +22,15 @@ Mostrar: Lista todos los detalles de las películas guardadas.
 
   8) Salir: Finaliza la ejecución del programa.
 
+## Problemas con las opciones:
+### Rigidez en la Búsqueda Avanzada: 
+no se puede realizar una busqueda de filtro avanzado que filtre por autor y un criterio mas.
+### Problema de Carga Duplicada (Consistencia):
+Si el usuario selecciona la opción 1 (Cargar Películas) más de una vez, el programa volverá a leer el CSV y duplicará las entradas en las listas de los mapas y en la watchlist
+### Sensibilidad a Mayúsculas y Espacios:
+Las funciones map_search utilizan strcmp. Esto significa que si el usuario busca el género "action" (en minúsculas) y en el CSV aparece como "Action", el programa dirá que no se encontraron resultados, pasa igual con autores y titulos.
+### Limitaciones en la Watchlist:
+El usuario puede agregar la misma película 10 veces a su watchlist. No hay una comprobación de "Si la película ya está en la lista, no agregar".
 
 ## Estructura de Datos (TDAs)
 
@@ -43,6 +52,27 @@ Una vez compilado, ejecuta el programa con:
  ./tarea_2
  ````
 
+## integrantes y aportaciones:
+
+## Sergio torres: 
+ Crear las funciones:
+1) buscar_por_genero
+2) busqueda_avanzada
+3) calificar_pelicula
+4) mostrar_calificaciones
+5) cargar archivo csv
+
+## Yaril Salinas:
+  Crear las funciones:
+1) mi_watchlist
+2) buscar_por_director
+3) buscar_por_decada
+4) imprimir_lista_strings
+5) cargar la tarea de ejemplo para empezar a trabajar desde ahi
+
+## En conjunto:
+  completar el main.
+  ajustar el texto que se muestra por pantalla y los mensajes.
  
 ### Comandos Git (Flujo de Trabajo)
 Para mantener el repositorio actualizado y subir tus cambios:
