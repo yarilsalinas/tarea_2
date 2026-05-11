@@ -24,7 +24,7 @@ void mostrarMenuPrincipal() {
   puts("2) Buscar por género");
   puts("3) Buscar por autor");
   puts("4) Buscar por decada");
-  puts("5) Buscar por doble criterio(Genero, Decada)");
+  puts("5) Buscar por Genero y Decada");
   puts("6) Gestión de watchlist");
   puts("7) Calificar pelicula");
   puts("8) Salir");
@@ -222,6 +222,12 @@ void busqueda_avanzada(Map *pelis_bygenre){
   printf("Ingrese el genero a buscar: ");
   scanf(" %[^\n]", genre);
 
+  MapPair *pair = map_search(pelis_bygenre, genre);
+  if(pair == NULL){
+    printf("No existe el genero: %s\n", genre);
+    return;
+  }
+  
   printf("Ingrese la decada a buscar: ");
   scanf("%d", &decada);
   if(decada % 10 != 0){
@@ -229,12 +235,7 @@ void busqueda_avanzada(Map *pelis_bygenre){
     return;
   }
 
-  MapPair *pair = map_search(pelis_bygenre, genre);
-  if(pair == NULL){
-    printf("No se encontraron peliculas\n");
-    return;
-  }
-  
+
   List *lista = pair -> value;
   Film *peli = list_first(lista);
 
