@@ -40,3 +40,19 @@ void buscar_por_id(Map *pelis_byid) {
       printf("La película con id %s no existe\n", id);
     }
 }
+
+// void mostrar_calificaciones(Film *peli){//muestra todas las calificaciones de una pelicula para no hacer repetitivo el codigo
+  MapPair *pair = map_first(peli -> calificaciones);
+  if(pair == NULL){ //si no tiene calificacion
+    printf("No a recibido calificaciones aún\n");
+    return;
+  }
+  printf("Calificaciones : ");
+  while(pair != NULL){
+    char *usuario = pair -> key;
+    int *nota = pair -> value;
+    printf("%s : %d \n", usuario, *nota);
+
+    pair = map_next(peli -> calificaciones);
+  }
+}

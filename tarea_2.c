@@ -10,7 +10,7 @@ typedef struct {
   char title[100];
   List *directors; //lista de directores
   List *genres;//Lista de géneros
-  int year;
+  int year; //año de forma int
   Map *calificaciones;//Mapa de calificaciones Key: Usuario ; data: Calificación
 } Film;
 
@@ -50,8 +50,7 @@ void imprimir_lista_strings(List *lista) { // se usa para mostrar la lista de au
 
 void mostrar_calificaciones(Film *peli){//muestra todas las calificaciones de una pelicula para no hacer repetitivo el codigo
   MapPair *pair = map_first(peli -> calificaciones);
-  if(pair == NULL){
-    printf("No a recibido calificaciones aún\n");
+  if(pair == NULL){ //si no tiene calificacion
     return;
   }
   printf("Calificaciones : ");
@@ -102,7 +101,7 @@ void cargar_peliculas(Map *pelis_byid, Map *pelis_bygenres, Map *pelis_bydirecto
       genre = list_next(peli->genres);// Avanza al siguiente género en la lista
     }
 
-    char *director = list_first(peli->directors);
+    char *director = list_first(peli->directors); // bucle para poblar el mapa de directores
     while (director != NULL) {
       MapPair *director_pair = map_search(pelis_bydirectors, director);
       if (director_pair == NULL) {
@@ -116,7 +115,7 @@ void cargar_peliculas(Map *pelis_byid, Map *pelis_bygenres, Map *pelis_bydirecto
         director = list_next(peli->directors);
       }
 
-    int decada_val = (peli->year / 10) * 10;  
+    int decada_val = (peli->year / 10) * 10;  // bucle para poblar el mapa de decadas
     char *decada_key = malloc(5 * sizeof(char));
     sprintf(decada_key, "%d", decada_val); 
     MapPair *decada_pair = map_search(pelis_bydecada, decada_key);
@@ -266,7 +265,7 @@ void mi_watchlist(Map *pelis_byid, List *watchlist) {
     printf("2) Eliminar película\n");
     printf("3) Mostrar mi lista\n");
     printf("4) Volver al menú principal\n");
-    printf("Ingrese su opción: ");
+    printf("Ingrese su opción: "); // se pide la opcion al usuario
     scanf(" %c", &opcion);
 
     switch (opcion) {
@@ -307,7 +306,7 @@ void mi_watchlist(Map *pelis_byid, List *watchlist) {
       case '3': // mostrar watchlist
         printf("\n--- MI WATCHLIST ---\n");
         p = list_first(watchlist);
-        if (p == NULL) {
+        if (p == NULL) { // si no existe primer elemento esta vacia la lista
           printf("Tu lista está vacía.\n");
         } else {
             while (p != NULL) {
@@ -383,15 +382,19 @@ int main() {
 
     switch (opcion) {
     case '1':
+      //Cargar Catálogo: La usuaria ingresa la ruta del archivo CSV y la aplicación carga toda la información en memoria para su uso inmediato.
       cargar_peliculas(pelis_byid, pelis_bygenres, pelis_bydirectors, pelis_bydecada);
       break;
     case '2':
+      //Buscar por Género: La usuaria ingresa un género (ej. "Sci-Fi", "Drama", "Action") y la aplicación despliega todos los títulos que pertenecen a esa categoría con su información completa.
       buscar_por_genero(pelis_bygenres);
       break;
     case '3':
+      //Buscar por Director: La usuaria ingresa el nombre de un director o directora y la aplicación lista todas sus obras disponibles en el catálogo
       buscar_por_director(pelis_bydirectors);
       break;
     case '4':
+      //Buscar por Década: La usuaria ingresa un año de referencia (ej. 1990) y la aplicación debe mostrar todas las películas lanzadas en esa década (en este caso, entre 1990 y 1999 inclusive).
       buscar_por_decada(pelis_bydecada);
       break;
     case '5':
