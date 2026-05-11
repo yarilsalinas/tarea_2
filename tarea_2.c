@@ -38,7 +38,7 @@ int is_equal_int(void *key1, void *key2) {
     return *(int *)key1 == *(int *)key2; // Compara valores enteros directamente
   }
 
-void imprimir_lista_strings(List *lista) {
+void imprimir_lista_strings(List *lista) { // se usa para mostrar la lista de autores y generos
     char *item = list_first(lista);
     while (item != NULL) {
         printf("%s", item);
